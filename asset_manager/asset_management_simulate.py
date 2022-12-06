@@ -10,7 +10,7 @@ class AssetManagementSimulate():
         self.operational_term_list = [5, 10, 20, 30]
         self.invest_mumber_of_divesion = kwargs["invest_mumber_of_divesion"]
         self.simulation_term = kwargs["simulation_term"]
-        self.simulate_size = 10000
+        self.simulate_size = 100000
         self.total_investment_amount = kwargs["total_investment_amount"]
         self.reserve_amount_a_year = self.total_investment_amount / self.invest_mumber_of_divesion #総投資額/分割回数(年)
         self.target_profit_margin = kwargs["target_profit_margin"]
