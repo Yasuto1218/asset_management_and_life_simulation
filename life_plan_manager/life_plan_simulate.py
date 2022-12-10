@@ -69,6 +69,7 @@ class LifePlanSimulate():
         plt.grid()
         plt.yticks(np.arange(round(np.min([all_life_simulate_list]), -6), round(np.max([all_life_simulate_list]), -6), 5000000))
         plt.legend()
+        plt.savefig(f'output/simulate_without_invest.jpeg')
         plt.show()
 
 
@@ -82,4 +83,5 @@ class LifePlanSimulate():
         plt.grid()
         plt.yticks(np.arange(round(np.min([all_life_simulate_list]), -6), round(np.max([invest_life_plan_simulate_list]), -6), 5000000))
         plt.legend()
+        plt.savefig(f'output/simulate_in_invest.jpeg')
         plt.show()

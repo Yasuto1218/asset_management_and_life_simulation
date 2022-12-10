@@ -37,12 +37,13 @@ class AssetManagementSimulate():
         return result_list
 
 
-    #分割投資の分布を結果をプロット
+    #投資の分布を結果をプロット
     def _plot_installment_investment_return_distribution(self, result_list):
         plt.figure(figsize=(10,7))
         ax = plt.subplot()
         per_list = []
         loss_per_list = []
+        loss_average_list = []
         for term in self.operational_term_list:
             how_many_times = result_list[term-1,:] / (self.total_investment_amount)
             density_result = gaussian_kde(how_many_times) #密度推定
@@ -51,10 +52,13 @@ class AssetManagementSimulate():
             per_list.append(percentage)
             loss_per = len(how_many_times[how_many_times <= self.acceptable_risk]) / len(how_many_times) #元本割れする確率
             loss_per_list.append(loss_per)
+            loss_average = np.mean(how_many_times[how_many_times < 1]- 1)
+            loss_average_list.append(loss_average)
           
         plt.title(f'分割投資 : 年利{(self.interest_rate - 1) * 100:.1f}%, リスク{self.rate_risk * 100}%の商品利益確率', fontsize=18)
         plt.legend(bbox_to_anchor=(0.95, 0.1), loc='lower right', borderaxespad=0, fontsize=16)
-        plt.savefig(f'output/分割投資 : 年利{(self.interest_rate - 1) * 100:.1f}%, リスク{self.rate_risk * 100}%の商品利益確率.jpeg')
+        plt.savefig('output/invest_simulate_distribution.jpeg')
+        # plt.savefig(f'output/分割投資 : 年利{(self.interest_rate - 1) * 100:.1f}%, リスク{self.rate_risk * 100}%の商品利益確率.jpeg')
         plt.show()
         
         for i in [f'{term}年後に資産が{self.target_profit_margin:,}倍以上になる確率{per * 100:.1f}%' for term, per in zip(self.operational_term_list, per_list)]:
@@ -62,6 +66,9 @@ class AssetManagementSimulate():
         print('\n')
         for i in [f'{term}年後に資産が{np.round((1 - self.acceptable_risk) * 100)}%以上減少している確率{per * 100:.1f}%' for term, per in zip(self.operational_term_list, loss_per_list)]:
             print(i)
+        # print('\n')
+        # for i in [f'{term}年後に元本割れした場合の損失の平均 : {loss_average}' for term, loss_average in zip(self.operational_term_list, loss_average_list)]:
+        #     print(i)
 
 
     #シミュレーション結果を受けて分割投資の分布をプロット
@@ -108,8 +115,9 @@ class AssetManagementSimulate():
         plt.ticklabel_format(style='plain',axis='y')
         plt.title(f'分割投資 : 年利{(self.interest_rate - 1)* 100:.1f}%, リスク{self.rate_risk * 100}%、{self.invest_mumber_of_divesion}年で投資額{self.total_investment_amount:,}円', fontsize=18)
         plt.grid()
-        # plt.yticks((np.round(result_lower), np.round(result_upper), 2000000))
+        # plt.yticks(np.arange(np.round(result_lower, -6), np.round(result_upper, -6), 2000000))
         plt.legend(bbox_to_anchor=(0.25, 0.95), loc='upper right', borderaxespad=0, fontsize=16)
-        plt.savefig(f'output/年利{(self.interest_rate - 1)* 100:.1f}%, リスク{self.rate_risk * 100}%、{self.invest_mumber_of_divesion}年で投資額{self.total_investment_amount:,}円.jpeg')
+        # plt.savefig(f'output/年利{(self.interest_rate - 1)* 100:.1f}%, リスク{self.rate_risk * 100}%、{self.invest_mumber_of_divesion}年で投資額{self.total_investment_amount:,}円.jpeg')
+        plt.savefig('output/invest_simulate.jpeg')
         plt.show()
 
