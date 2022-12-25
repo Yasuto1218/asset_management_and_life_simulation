@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.ticker as ticker
 
 class LifePlanSimulate():
     def __init__(self, **kwargs):
@@ -65,6 +66,7 @@ class LifePlanSimulate():
         ax1 = fig.add_subplot(1, 1, 1)
         ax1.bar(age_list, all_life_simulate_list, alpha=1.0, color='skyblue', label="投資なし")
         plt.ticklabel_format(style='plain',axis='y')
+        plt.gca().get_yaxis().set_major_formatter(ticker.FuncFormatter(lambda v,p: f'{int(v):,d}'))
         plt.title(f'資産額:{all_property:,}円({self.simulate_age}歳時点)', fontsize=14)
         plt.grid()
         plt.yticks(np.arange(round(np.min([all_life_simulate_list]), -6), round(np.max([all_life_simulate_list]), -6), 5000000))
@@ -79,6 +81,7 @@ class LifePlanSimulate():
         ax1.bar(age_list, invest_life_plan_simulate_list, alpha=1.0, color='dodgerblue', label="投資あり")
         ax1.bar(age_list, all_life_simulate_list, alpha=1.0, color='skyblue', label="投資なし")
         plt.ticklabel_format(style='plain',axis='y')
+        plt.gca().get_yaxis().set_major_formatter(ticker.FuncFormatter(lambda v,p: f'{int(v):,d}'))
         plt.title(f'資産額:{invest_life_plan_simulate_list[-1]:,.0f}円({self.simulate_age}歳時点)', fontsize=14)
         plt.grid()
         plt.yticks(np.arange(round(np.min([all_life_simulate_list]), -6), round(np.max([invest_life_plan_simulate_list]), -6), 5000000))

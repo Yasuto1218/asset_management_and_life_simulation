@@ -1,6 +1,8 @@
 import matplotlib.pyplot as plt
+import matplotlib.ticker as ticker
 import numpy as np
 from scipy.stats import gaussian_kde 
+
 
 class AssetManagementSimulate():
 
@@ -66,9 +68,9 @@ class AssetManagementSimulate():
         print('\n')
         for i in [f'{term}年後に資産が{np.round((1 - self.acceptable_risk) * 100)}%以上減少している確率{per * 100:.1f}%' for term, per in zip(self.operational_term_list, loss_per_list)]:
             print(i)
-        # print('\n')
-        # for i in [f'{term}年後に元本割れした場合の損失の平均 : {loss_average}' for term, loss_average in zip(self.operational_term_list, loss_average_list)]:
-        #     print(i)
+        print('\n')
+        for i in [f'{term}年後に元本割れした場合の損失の平均 : {loss_average}' for term, loss_average in zip(self.operational_term_list, loss_average_list)]:
+            print(i)
 
 
     #シミュレーション結果を受けて分割投資の分布をプロット
@@ -110,14 +112,15 @@ class AssetManagementSimulate():
         ax1.plot(x, result_median,c="b", label="中央値", alpha=0.7) #中央値
         ax1.plot(x, [self.reserve_amount_a_year * i if i <= self.invest_mumber_of_divesion else self.total_investment_amount for i in x], label="投資元本", alpha=0.7) #単純投資合計額
 
-        # ax1.fill_between(x, result_upper, result_lower, color='g', alpha=0.1, label='90信頼区間') #信頼区間
+        ax1.fill_between(x, result_upper, result_lower, color='g', alpha=0.1, label='90信頼区間') #信頼区間
 
         plt.ticklabel_format(style='plain',axis='y')
+        plt.gca().get_yaxis().set_major_formatter(ticker.FuncFormatter(lambda v,p: f'{int(v):,d}'))
         plt.title(f'分割投資 : 年利{(self.interest_rate - 1)* 100:.1f}%, リスク{self.rate_risk * 100}%、{self.invest_mumber_of_divesion}年で投資額{self.total_investment_amount:,}円', fontsize=18)
         plt.grid()
         # plt.yticks(np.arange(np.round(result_lower, -6), np.round(result_upper, -6), 2000000))
         plt.legend(bbox_to_anchor=(0.25, 0.95), loc='upper right', borderaxespad=0, fontsize=16)
-        # plt.savefig(f'output/年利{(self.interest_rate - 1)* 100:.1f}%, リスク{self.rate_risk * 100}%、{self.invest_mumber_of_divesion}年で投資額{self.total_investment_amount:,}円.jpeg')
+        plt.savefig(f'output/年利{(self.interest_rate - 1)* 100:.1f}%, リスク{self.rate_risk * 100}%、{self.invest_mumber_of_divesion}年で投資額{self.total_investment_amount:,}円.jpeg')
         plt.savefig('output/invest_simulate.jpeg')
         plt.show()
 
